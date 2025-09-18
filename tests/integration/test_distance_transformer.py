@@ -116,7 +116,7 @@ def test_should_add_distance_column_with_calculated_distance(spark_session: Spar
     expected_distance_schema = StructField('distance', DoubleType(), nullable=True)
     actual_distance_schema = actual_dataframe.schema['distance']
 
-    sparktest.assertSchemaEqual(actual_distance_schema, expected_distance_schema)
+    assert expected_distance_schema == actual_distance_schema
     sparktest.assertDataFrameEqual(actual_dataframe, expected_dataframe)
 
 
