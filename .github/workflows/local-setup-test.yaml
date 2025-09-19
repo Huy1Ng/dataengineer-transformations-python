@@ -1,6 +1,32 @@
 name: Local Setup Test
 on: [push]
 jobs:
+  check_styles:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: "11"
+      - name: Install poetry
+        run: pipx install poetry
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "poetry"
+      - name: Install Python Dependencies
+        run: |
+          poetry install --with dev
+      - name: Check lint
+        run: |
+          poetry run pylint data_transformations tests
+      - name: Check typing
+        run: |
+          poetry run mypy --ignore-missing-imports --disallow-untyped-calls --disallow-untyped-defs --disallow-incomplete-defs \
+            data_transformations tests
+
   mac_nix:
     strategy:
       matrix:
